@@ -17,13 +17,16 @@ public class Die {
     private final Random random = new Random();
     public Die(int numSides) {
         if (numSides < MIN_SIDES || numSides > MAX_SIDES) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("Bad die creation: Illegal number of sides: " + numSides);
         } else {
             this.numSides = numSides;
         }
     }
     public int getCurrentValue() {
         int value = this.currentValue;
+        if (this.currentValue > this.numSides) {
+            throw new DieNotRolledException();
+        }
         this.currentValue = 0;
         return value;
     }
