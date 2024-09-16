@@ -5,6 +5,7 @@
  * Name: William Terracina
  * Last Updated: 09/16/2024
  */
+
 package terracinaw;
 
 import java.util.Scanner;
@@ -24,10 +25,11 @@ public class Driver {
             try {
                 int[] diceSidesRolls = getInput();
                 Die[] dice = createDice(diceSidesRolls[0], diceSidesRolls[1]);
+                int[] rolls = rollDice(dice, diceSidesRolls[1], diceSidesRolls[2]);
                 valid = true;
             } catch (NumberFormatException e) {
                 System.out.println("Invalid input: All values must be whole numbers.");
-            } catch (IllegalStateException | IllegalArgumentException e) {
+            } catch (IllegalStateException | IllegalArgumentException | DieNotRolledException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -60,18 +62,33 @@ public class Driver {
     }
 
     private static int[] rollDice(Die[] dice, int numSides, int numRolls) {
-        int[] storage = new int[numSides];
-        for (Die die : dice) {
-            for (int j = 0; j < numRolls; j++) {
-                die.roll();
-                storage[die.getCurrentValue()]++;
+        int[] results = new int[numSides];
+        for (int i = 0; i < numRolls; i++) {
+            int value = 0;
+            for (int j = 0; j < dice.length; j++) {
+                dice[i].roll();
+                value += dice[i].getCurrentValue();
             }
+            results[i] = value;
         }
-        return storage;
+        return results;
     }
 
     private static int findMax(int[] rolls) {
-        return 0;
+        int max = 0;
+        for (int i = 0; i < rolls.length; i++) {
+            int rollValue = rolls[i];
+            int count = 0;
+            for (int j = 0; j < rolls.length; j++) {
+                if (rolls[j] == rollValue) {
+                    count++;
+                }
+            }
+            if (count > max) {
+                max = count;
+            }
+        }
+        return max;
     }
 
     private static void report(int numDice, int[] rolls, int max) {}
